@@ -1,0 +1,24 @@
+# Render "Infrastructure as Code" file for the backend.
+# You can either let Render read this file automatically (New + > Blueprint),
+# or just set these same values by hand when creating a Web Service -
+# see the root README.md for the click-by-click steps.
+services:
+  - type: web
+    name: expense-tracker-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Neon Postgres connection string - set this in the Render dashboard.
+      - key: DATABASE_URL
+        sync: false
+      # Random secret used to sign our own login tokens.
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      # Google OAuth client ID - must match the frontend's client ID.
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      # URL of the deployed frontend, used for CORS.
+      - key: FRONTEND_ORIGIN
+        sync: false
