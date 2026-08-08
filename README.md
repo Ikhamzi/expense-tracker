@@ -9,6 +9,16 @@ A small per-user expense tracker:
 
 Every expense endpoint requires a valid login token and only ever reads/writes the logged-in user's own rows.
 
+## Live deployment
+
+- Frontend: https://expense-tracker-frontend-ae67.onrender.com
+- Backend API: https://expense-tracker-ao1x.onrender.com (docs at `/docs`)
+- Database: Neon project `expense-tracker` (Oregon/US West Render region, Ohio/US East Neon region)
+- Google OAuth: consent screen is in **Testing** mode, so only accounts added under Google Cloud Console
+  > Google Auth Platform > Audience > Test users can use "Sign in with Google" until the app is published.
+
+Free-tier Render services spin down after inactivity, so the first request after a while may take ~50 seconds.
+
 ---
 
 ## 1. Set up the Neon database
