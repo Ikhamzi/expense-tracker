@@ -1,10 +1,16 @@
-"""SQLAlchemy table models: users and expenses."""
+"""SQLAlchemy table models: users and expenses.
+
+Unchanged from the old top-level models.py - same table names, same column
+names, same types. This is a live database, so none of that is allowed to
+change here; only the import path (Base now comes from infrastructure.db.base
+instead of the old top-level database.py) is different.
+"""
 
 from sqlalchemy import Column, Date, DateTime, ForeignKey, Index, Integer, Numeric, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from database import Base
+from infrastructure.db.base import Base
 
 
 class User(Base):

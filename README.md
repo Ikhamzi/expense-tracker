@@ -9,6 +9,8 @@ A small per-user expense tracker:
 
 Every expense endpoint requires a valid login token and only ever reads/writes the logged-in user's own rows.
 
+The backend is organized as a small Domain-Driven Design (DDD) codebase (domain / application / infrastructure / interfaces layers), uses Alembic for database migrations, and has rate limiting, security headers, and startup config validation on top of the original functionality. See [`backend/ARCHITECTURE.md`](backend/ARCHITECTURE.md) for a full explanation of the layers, every security change, and how to run it locally.
+
 ## Live deployment
 
 - Frontend: https://expense-tracker-frontend-ae67.onrender.com

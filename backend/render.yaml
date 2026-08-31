@@ -8,8 +8,24 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    # `alembic upgrade head` applies any database migrations that haven't
+    # run yet, then uvicorn starts the API. NOTE (first deploy after the
+    # DDD refactor only): the `users`/`expenses` tables already exist in
+    # production from before this change, so before this first deploy you
+    # must run `alembic stamp head` ONCE by hand (e.g. from Render's Shell
+    # tab) to tell Alembic "this database is already at the initial
+    # migration" - otherwise `alembic upgrade head` will fail trying to
+    # create tables that already exist. See backend/ARCHITECTURE.md for the
+    # exact command. Every deploy after that first one is safe to run as-is.
+    startCommand: alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
+      # Tells the app it's running in production. Defaults to "development"
+      # if unset (e.g. for local dev), so this isn't a required variable -
+      # it just turns on one extra safety check: the app refuses to start
+      # if JWT_SECRET_KEY is still the insecure default value while this is
+      # set to "production". See backend/infrastructure/config.py.
+      - key: ENV
+        value: production
       # Neon Postgres connection string - set this in the Render dashboard.
       - key: DATABASE_URL
         sync: false

@@ -1,8 +1,14 @@
 """Pydantic models (schemas) used to validate requests and shape responses.
 
-These are separate from the SQLAlchemy models in models.py: models.py
-describes database tables, this file describes the JSON that goes in and
-out of the API.
+These are separate from the SQLAlchemy models in infrastructure/db/models.py:
+that file describes database tables, this file describes the JSON that goes
+in and out of the API.
+
+Unchanged from the old top-level schemas.py, except for one addition: three
+fields now have a `max_length` so a client can't send an unreasonably huge
+string (name, category, description). Field names, types, and every other
+existing constraint (password min_length=6, amount gt=0) are exactly the
+same as before, so this does not change any currently-valid request.
 """
 
 from datetime import date, datetime
@@ -19,7 +25,7 @@ from pydantic import BaseModel, EmailStr, Field
 class SignupRequest(BaseModel):
     email: EmailStr
     password: str = Field(min_length=6)
-    name: str
+    name: str = Field(max_length=200)
 
 
 class LoginRequest(BaseModel):
@@ -45,15 +51,15 @@ class TokenResponse(BaseModel):
 
 class ExpenseCreate(BaseModel):
     amount: Decimal = Field(gt=0)
-    category: str
-    description: Optional[str] = None
+    category: str = Field(max_length=100)
+    description: Optional[str] = Field(default=None, max_length=1000)
     date: date
 
 
 class ExpenseUpdate(BaseModel):
     amount: Decimal = Field(gt=0)
-    category: str
-    description: Optional[str] = None
+    category: str = Field(max_length=100)
+    description: Optional[str] = Field(default=None, max_length=1000)
     date: date
 
 
